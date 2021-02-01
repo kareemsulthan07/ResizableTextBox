@@ -1,0 +1,122 @@
+﻿<Window x:Class="ResizableTextBox.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ResizableTextBox"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="550" 
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+    <Window.Resources>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ResizeGripBackgroundColorBrush">#F0F0F0</SolidColorBrush>
+
+        <Style x:Key="ResizableTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ScrollViewer x:Name="PART_ContentHost" 
+                                          Focusable="false" 
+                                          HorizontalScrollBarVisibility="Hidden" 
+                                          VerticalScrollBarVisibility="Hidden"/>
+
+                                <Grid x:Name="resizeGripGrid"
+                                      Background="{StaticResource ResizeGripBackgroundColorBrush}"
+                                      Width="17"
+                                      Height="17"
+                                      Cursor="SizeNWSE"
+                                      HorizontalAlignment="Right"
+                                      Grid.Row="1"
+                                      PreviewMouseLeftButtonDown="resizeGripGrid_PreviewMouseLeftButtonDown"
+                                      PreviewMouseMove="resizeGripGrid_PreviewMouseMove"
+                                      PreviewMouseLeftButtonUp="resizeGripGrid_PreviewMouseLeftButtonUp">
+                                    <Line Stroke="Gray"
+                                          X1="0"
+                                          Y1="18"
+                                          X2="18"
+                                          Y2="0"/>
+
+                                    <Line Stroke="Gray"
+                                          X1="5"
+                                          Y1="18"
+                                          X2="18"
+                                          Y2="5"/>
+
+                                    <Line Stroke="Gray"
+                                          X1="10"
+                                          Y1="18"
+                                          X2="18"
+                                          Y2="10"/>
+
+                                    <Line Stroke="Gray"
+                                          X1="15"
+                                          Y1="18"
+                                          X2="18"
+                                          Y2="15"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <TextBox x:Name="mainTextBox"
+                 Style="{StaticResource ResizableTextBoxStyle}" 
+                 AcceptsReturn="True"
+                 FontSize="16"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 Width="300"
+                 Height="300"/>
+    </Grid>
+</Window>
